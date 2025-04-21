@@ -1,0 +1,10 @@
+/libro-visitas
+│
+├── index.php           ← muestra el formulario y los mensajes
+├── save.php            ← guarda el mensaje
+├── /data
+│   └── messages.txt    ← archivo donde se guardan los mensajes
+├── /includes
+│   └── functions.php   ← funciones reutilizables (como guardar mensaje, sanitizar)
+├── /assets
+│   └── style.css       ← estilos CSS opcionales
