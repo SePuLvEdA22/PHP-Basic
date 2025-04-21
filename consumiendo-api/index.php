@@ -1,26 +1,27 @@
 <?php 
+declare(strict_types=1); // A nivel de archivo y arriba de todo
 const API_URL = "https://whenisthenextmcufilm.com/api";
 
-# Inicializar una nueva sesion de cURL, ch = cURL handle
-$ch = curl_init(API_URL);
+function get_data(string $url): array 
+{
+    $result = file_get_contents($url); // Si solo quieres hacer un GET a una API.
+    $data = json_decode($result, true);
+    return $data;
+}
 
-// Indicar que queremos recibir el resultado de la peticion y no mostrarlo en pantalla.
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-/*
-Ejecutar la peticion y
-guardamos el resultado.
-*/
-$result = curl_exec($ch);
+function get_until_message (int $days): string
+{
+    return match (true) {
+        $days === 0 => "Hoy se estrena 🥳",
+        $days === 1 => "Mañana se estrena 🚀",
+        $days < 7   => "Este semana se estrena 🤭",
+        $days < 30  => "Este mes se estrena 📅",
+        default     => "$days hasta el estreno 📆",
+    };
+}
 
-//Una alternativa seria utilizar file_get_contents(API_URL);
-// $result = file_get_contents(API_URL); // Si solo quieres hacer un GET a una API.
-
-
-$data = json_decode($result, true);
-
-curl_close($ch);
-
+$data = get_data(API_URL);
+$untilMessage = get_until_message($data['days_until']);
 ?>
 
 <head>
@@ -43,7 +44,7 @@ curl_close($ch);
          style="border-radius: 19px;">
     </section>
     <hgroup>
-        <h3><?= $data["title"] ?> se estrena en <?= $data["days_until"] ?> dias</h3>
+        <h3><?= $data["title"] ?> - <?= $untilMessage ?> </h3>
         <p>Fecha de estreno: <?= $data["release_date"] ?></p>
         <p>La siguiente pelicula es: <?= $data["following_production"]["title"] ?></p>
     </hgroup>
@@ -61,6 +62,10 @@ curl_close($ch);
         display: flex;
         justify-content: center;
         text-align: center;
+    }
+
+    img {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
     }
 
     hgroup {
