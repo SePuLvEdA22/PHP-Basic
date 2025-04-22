@@ -1,10 +1,13 @@
 <?php
+require_once './untils/consts.php';
 require_once './untils/functions.php';
 
 $data = get_data(API_URL);
-$untilMessage = get_until_message($data['days_until']);
+$until_message = get_until_message($data['days_until']);
 ?>
 
-<?= require 'sections/head.php' ?>
-<?= require 'sections/main.php' ?>
-<?= require 'sections/styles.php' ?>
+<?php render_template('head', $data); ?>
+<?php render_template('main', array_merge(
+    $data,
+    ["until_message" => $until_message])) ?>
+<?php render_template('styles') ?>

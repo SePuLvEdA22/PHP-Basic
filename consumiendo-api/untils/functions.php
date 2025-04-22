@@ -1,6 +1,11 @@
 <?php 
 declare(strict_types=1); // A nivel de archivo y arriba de todo
-const API_URL = "https://whenisthenextmcufilm.com/api";
+
+function render_template (string $template, array $data = [])
+{
+    extract($data);
+    require "./templates/$template.php";
+}
 
 function get_data(string $url): array 
 {
@@ -16,7 +21,7 @@ function get_until_message (int $days): string
         $days === 1 => "Mañana se estrena 🚀",
         $days < 7   => "Este semana se estrena 🤭",
         $days < 30  => "Este mes se estrena 📅",
-        default     => "$days hasta el estreno 📆",
+        default     => "$days días hasta el estreno 📆",
     };
 }
 ?>
